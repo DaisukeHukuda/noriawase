@@ -73,6 +73,10 @@ export default function ProfileScreen() {
         title={profile?.is_driver ? 'ドライバー情報を編集' : 'ドライバー登録'}
         onPress={() => router.push('/(app)/driver/register')}
       />
+      <View style={{ height: 8 }} />
+      <Button title="乗合をさがす（ドライバー）" onPress={() => router.push('/(app)/requests')} />
+      <View style={{ height: 8 }} />
+      <Button title="自分のリクエスト" onPress={() => router.push('/(app)/requests/mine')} />
 
       <View style={{ height: 16 }} />
       <Button title="ログアウト" color="#ff3b30" onPress={signOut} />

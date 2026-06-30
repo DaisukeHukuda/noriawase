@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, Alert, Button, FlatList, Text, View } from 'react-native';
-import { useFocusEffect, useLocalSearchParams } from 'expo-router';
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useAuth } from '../../../src/features/auth/useAuth';
 import { supabase } from '../../../src/lib/supabase';
 import { getCommunity } from '../../../src/features/community/communityApi';
@@ -15,6 +15,7 @@ import type { Community } from '../../../src/features/community/types';
 export default function CommunityDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { session } = useAuth();
+  const router = useRouter();
   const [community, setCommunity] = useState<Community | null>(null);
   const [members, setMembers] = useState<MembershipWithProfile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,6 +66,10 @@ export default function CommunityDetail() {
   return (
     <View style={{ flex: 1, padding: 24, gap: 12 }}>
       <Text style={{ fontSize: 22, fontWeight: '600' }}>{community.name}</Text>
+      <Button
+        title="「乗せて」と頼む"
+        onPress={() => router.push(`/(app)/requests/create?communityId=${community.id}`)}
+      />
       {isOwner && (
         <Text>
           招待コード：<Text selectable style={{ fontWeight: '700', letterSpacing: 2 }}>{community.invite_code}</Text>
