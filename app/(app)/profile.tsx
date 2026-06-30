@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
 import { ActivityIndicator, Alert, Button, Text, TextInput, View } from 'react-native';
 import { useAuth } from '../../src/features/auth/useAuth';
 import { supabase } from '../../src/lib/supabase';
@@ -7,6 +8,7 @@ import type { Profile } from '../../src/features/profile/types';
 
 export default function ProfileScreen() {
   const { session, signOut } = useAuth();
+  const router = useRouter();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
@@ -62,11 +64,17 @@ export default function ProfileScreen() {
         keyboardType="phone-pad"
         style={inputStyle}
       />
-      <Text style={{ color: '#86868b' }}>
-        ドライバー登録: {profile?.is_driver ? '済み' : '未（STEP 1 で対応）'}
-      </Text>
       <Button title={saving ? '保存中…' : '保存'} onPress={onSave} disabled={saving} />
-      <View style={{ height: 12 }} />
+
+      <View style={{ height: 16 }} />
+      <Button title="コミュニティ" onPress={() => router.push('/(app)/communities')} />
+      <View style={{ height: 8 }} />
+      <Button
+        title={profile?.is_driver ? 'ドライバー情報を編集' : 'ドライバー登録'}
+        onPress={() => router.push('/(app)/driver/register')}
+      />
+
+      <View style={{ height: 16 }} />
       <Button title="ログアウト" color="#ff3b30" onPress={signOut} />
     </View>
   );
