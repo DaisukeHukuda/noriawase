@@ -115,3 +115,23 @@ create trigger communities_set_updated_at
 create trigger community_memberships_set_updated_at
   before update on public.community_memberships
   for each row execute function public.set_updated_at();
+
+-- ============ プロフィール相互可視（同じコミュニティのメンバーは互いの氏名を見られる）============
+-- 閲覧者(auth.uid())が「承認済み」で属するコミュニティに、対象ユーザーの行が存在するか。
+-- 主催者は status=approved/role=owner なので、自分のコミュニティの申請者(pending)も見られる。
+-- SECURITY DEFINER でRLSをバイパスし profiles ポリシーとの相互再帰を回避。
+create or replace function public.shares_community(target uuid)
+returns boolean language sql security definer stable set search_path = public as $$
+  select exists (
+    select 1
+    from public.community_memberships me
+    join public.community_memberships them
+      on them.community_id = me.community_id
+    where me.user_id = auth.uid()
+      and me.status = 'approved'
+      and them.user_id = target
+  );
+$$;
+
+create policy "profiles_select_comember" on public.profiles
+  for select using (id = auth.uid() or public.shares_community(id));
