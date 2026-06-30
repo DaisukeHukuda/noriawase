@@ -23,6 +23,11 @@ create table public.driver_profiles (
 alter table public.profiles enable row level security;
 alter table public.driver_profiles enable row level security;
 
+-- テーブルアクセス権限（プロジェクト作成時に新規テーブル自動公開をOFFにしているため明示付与）
+-- ログイン済みユーザーのみ。実際に見える行は上記 RLS で「自分の行」に限定される。
+grant select, insert, update on public.profiles to authenticated;
+grant select, insert, update on public.driver_profiles to authenticated;
+
 -- 自分の profile のみ
 create policy "profiles_select_own" on public.profiles
   for select using (auth.uid() = id);
