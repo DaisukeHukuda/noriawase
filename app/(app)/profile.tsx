@@ -77,6 +77,8 @@ export default function ProfileScreen() {
       <Button title="乗合をさがす（ドライバー）" onPress={() => router.push('/(app)/requests')} />
       <View style={{ height: 8 }} />
       <Button title="自分のリクエスト" onPress={() => router.push('/(app)/requests/mine')} />
+      <View style={{ height: 8 }} />
+      <Button title="見守り家族" onPress={() => router.push('/(app)/watchers')} />
 
       <View style={{ height: 16 }} />
       <Button title="ログアウト" color="#ff3b30" onPress={signOut} />
